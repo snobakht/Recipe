@@ -1,0 +1,2 @@
+CHATGPT_API_KEY = ""
+DALLE_API_KEY = ""

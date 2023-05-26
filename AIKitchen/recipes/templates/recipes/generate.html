@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title> Welcome to AIKitchen! </title>
+</head>
+
+<body>
+    <form method="post">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"> Generate recipe and image</button>
+
+    </form>
+    {% if recipe %}
+    <h1>Generated Recipe:</h1>
+    <p>{{recipe.name}}</p>
+    <p>Ingredients:{{recipe.ingredients}}</p>
+    {% else %}
+    <h1>No recipes is generated!</h1>
+    {% endif %}
+    {%if image %}
+    <h1>Generated Image:</h1>
+    <img src="{{ image.url }}" alt="Generated Image">
+    {% else %}
+    <h1>No image generated!</h1>
+    {% endif %}
+</body>
+</html>
