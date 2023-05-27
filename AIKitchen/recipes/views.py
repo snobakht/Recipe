@@ -26,11 +26,18 @@ def generate_recipe_and_image(request):
     return render(request, 'recipes/generate.html', {'form': form})
 
 
-def generate_recipe(items ):
+def generate_recipe(items):
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
-        prompt= "in one line describe food containing these items:"+ items,
-        max_tokens=100
+        #prompt= "in one line describe food containing these items:"+ items,
+        max_tokens=100,
+        messages = [
+        {"role": "system", "content": "You are a helpful chef."},
+        {"role": "user", "content": "what food to make with onions and cucumbers and tomatoes and cheese"},
+        {"role": "assistant", "content": "a dish that has cheese and on top of that layers of cucumbers and finally "
+                                         "at the very top layer tomato"},
+        {"role": "user", "content": ""}
+    ]
     )
     recipe = response['choices'][0]['message']['content']
 
@@ -40,5 +47,5 @@ def generate_recipe(items ):
 def generate_image(items):
     data = {'prompt': items, 'n': 1}
     response = requests.post('https://api.openai.com/v1/images/generations', json=data, headers=headers)
-    image_url = response.json()['output'][0]['image']
+    image_url = response.json()['data'][0]['url']
     return image_url

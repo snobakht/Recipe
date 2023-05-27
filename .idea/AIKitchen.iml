@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/AIKitchen" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/AIKitchen/AIKitchen" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/AIKitchen/recipes" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv_AI" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (AIKitchen)" jdkType="Python SDK" />
