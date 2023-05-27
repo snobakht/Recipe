@@ -8,8 +8,11 @@ from .forms import RecipeForm
 openai.api_key = CHATGPT_API_KEY
 headers = {'Authorization': f'Token {DALLE_API_KEY}', 'Content_Type': 'application/json'}
 
+
 def home(request):
     return render(request, 'home.html')
+
+
 # Create your views here.
 def generate_recipe_and_image(request):
     if request.method == 'POST':
@@ -18,8 +21,8 @@ def generate_recipe_and_image(request):
             ingredients = form.cleaned_data['ingredients']
 
             recipe = generate_recipe(ingredients)
-            image = generate_image(ingredients)
-            recipe_obj = Recipe.objects.create(name=recipe, ingredients=ingredients, image=image)
+            image = generate_image(recipe)
+            recipe_obj = Recipe.objects.create(name="a dish", ingredients=ingredients, image=image)
             return render(request, 'recipes/generate.html', {'recipe': recipe_obj, 'image': image})
     else:
         form = RecipeForm()
@@ -27,25 +30,30 @@ def generate_recipe_and_image(request):
 
 
 def generate_recipe(items):
-    response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        #prompt= "in one line describe food containing these items:"+ items,
-        max_tokens=100,
-        messages = [
-        {"role": "system", "content": "You are a helpful chef."},
-        {"role": "user", "content": "what food to make with onions and cucumbers and tomatoes and cheese"},
-        {"role": "assistant", "content": "a dish that has cheese and on top of that layers of cucumbers and finally "
-                                         "at the very top layer tomato"},
-        {"role": "user", "content": ""}
-    ]
-    )
-    recipe = response['choices'][0]['message']['content']
+    # response = openai.ChatCompletion.create(
+    #     model='gpt-3.5-turbo',
+    #     # prompt= "in one line describe food containing these items:"+ items,
+    #     max_tokens=100,
+    #     messages=[
+    #         {"role": "system", "content": "You are a helpful chef."},
+    #         {"role": "user", "content": "onions, cucumbers, tomatoes, cheese"},
+    #         {"role": "assistant",
+    #          "content": "a dish that has cheese and on top of that layers of cucumbers and finally "
+    #                     "at the very top layer tomato"},
+    #         {"role": "user", "content": ""}
+    #     ]
+    # )
+    # recipe = response['choices'][0]['message']['content']
+    recipe = "A plate with layers of " + items
 
     return recipe
 
 
-def generate_image(items):
-    data = {'prompt': items, 'n': 1}
-    response = requests.post('https://api.openai.com/v1/images/generations', json=data, headers=headers)
-    image_url = response.json()['data'][0]['url']
+def generate_image(recipe):
+    response = openai.Image.create(
+        prompt=recipe,
+        n=1,
+        size="1024x1024"
+    )
+    image_url = response['data'][0]['url']
     return image_url
