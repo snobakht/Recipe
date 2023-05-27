@@ -21,8 +21,10 @@ def generate_recipe_and_image(request):
             ingredients = form.cleaned_data['ingredients']
 
             recipe = generate_recipe(ingredients)
+
+
             image = generate_image(recipe)
-            recipe_obj = Recipe.objects.create(name="a dish", ingredients=ingredients, image=image)
+            recipe_obj = Recipe.objects.create(name=recipe.split("THE_DISH_NAME_IS:")[1], ingredients=ingredients, image=image)
             return render(request, 'recipes/generate.html', {'recipe': recipe_obj, 'image': image})
     else:
         form = RecipeForm()
@@ -30,21 +32,25 @@ def generate_recipe_and_image(request):
 
 
 def generate_recipe(items):
-    # response = openai.ChatCompletion.create(
-    #     model='gpt-3.5-turbo',
-    #     # prompt= "in one line describe food containing these items:"+ items,
-    #     max_tokens=100,
-    #     messages=[
-    #         {"role": "system", "content": "You are a helpful chef."},
-    #         {"role": "user", "content": "onions, cucumbers, tomatoes, cheese"},
-    #         {"role": "assistant",
-    #          "content": "a dish that has cheese and on top of that layers of cucumbers and finally "
-    #                     "at the very top layer tomato"},
-    #         {"role": "user", "content": ""}
-    #     ]
-    # )
-    # recipe = response['choices'][0]['message']['content']
-    recipe = "A plate with layers of " + items
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        # prompt= "in one line describe food containing these items:"+ items,
+        max_tokens=100,
+        messages=[
+            {"role": "system", "content": "you are a good prompt engineer for dalle 2 image generator!"},
+            {"role": "user", "content": "write one sentence about these ingredients: "+ items+" "+ "That is a certain "
+                                                                                                   "cuisine and has "
+                                                                                                   "these "
+                                                                                                   "ingredients, "
+                                                                                                   "also provide a "
+                                                                                                   "name for that "
+                                                                                                   "dish. make sure that you provide the name of the dish in your final sentence, exactly as, THE_DISH_NAME_IS: name_of_dish"},
+            {"role": "assistant",
+             "content": ""},
+            {"role": "user", "content": ""}
+        ]
+    )
+    recipe = response['choices'][0]['message']['content']
 
     return recipe
 
