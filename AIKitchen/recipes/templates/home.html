@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to AIKitchen</title>
+    {% load static %}
+    <title>Welcome to AIKitchen!</title>
+    <img src="{% static 'images/logo.png' %}" alt="AIKitchen Logo" width="300" height="300">
+
 </head>
 <body>
-<h1>Welcome to AIKitchen</h1>
+<h1>Welcome to AIKitchen!</h1>
 <p>This is the homepage of AIKitchen!</p>
+<a href="{% url 'generate' %}" class="btn btn-primary">Generate Recipe</a>
 </body>
 </html>

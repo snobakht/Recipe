@@ -21,10 +21,9 @@ def generate_recipe_and_image(request):
             ingredients = form.cleaned_data['ingredients']
 
             recipe = generate_recipe(ingredients)
-
-
             image = generate_image(recipe)
-            recipe_obj = Recipe.objects.create(name=recipe.split("THE_DISH_NAME_IS:")[1], ingredients=ingredients, image=image)
+            recipe_obj = Recipe.objects.create(name=recipe.split("THE_DISH_NAME_IS:")[1], ingredients=ingredients,
+                                               order=recipe, image=image)
             return render(request, 'recipes/generate.html', {'recipe': recipe_obj, 'image': image})
     else:
         form = RecipeForm()
@@ -59,7 +58,7 @@ def generate_image(recipe):
     response = openai.Image.create(
         prompt=recipe,
         n=1,
-        size="1024x1024"
+        size="512x512"
     )
     image_url = response['data'][0]['url']
     return image_url

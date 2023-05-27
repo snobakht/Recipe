@@ -2,10 +2,27 @@
 
 <html>
 <head>
-    <title> Welcome to AIKitchen! </title>
+    {% load static %}
+    <title>Welcome to AIKitchen</title>
+    <img src="{% static 'images/logo.png' %}" alt="AIKitchen Logo" width="300" height="300">
+
 </head>
 
 <body>
+ {% if recipe %}
+    <h1>Generated Recipe:</h1>
+    <h2 style="color: red;">{{recipe.name}}</h2>
+    <p>Ingredients:{{recipe.ingredients}}</p>
+    <p>Recipe:{{recipe.order}}</p>
+    {% else %}
+    <h1>Waiting for ingredients to cook a delicious meal for you!</h1>
+    {% endif %}
+    {%if image %}
+    <h1>Generated Image:</h1>
+    <img src="{{ image}}" alt="Generated Image">
+    {% else %}
+    <h1></h1>
+    {% endif %}
     <form method="post">
 
         {% csrf_token %}
@@ -13,18 +30,6 @@
         <button type="submit"> Generate recipe and image</button>
 
     </form>
-    {% if recipe %}
-    <h1>Generated Recipe:</h1>
-    <p>{{recipe.name}}</p>
-    <p>Ingredients:{{recipe.ingredients}}</p>
-    {% else %}
-    <h1>No recipes is generated!</h1>
-    {% endif %}
-    {%if image %}
-    <h1>Generated Image:</h1>
-    <img src="{{ image}}" alt="Generated Image">
-    {% else %}
-    <h1>No image generated!</h1>
-    {% endif %}
+
 </body>
 </html>
